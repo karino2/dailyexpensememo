@@ -2,6 +2,7 @@ package com.livejournal.karino2.DailyExpenseMemo;
 
 import java.util.Hashtable;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -88,14 +89,65 @@ public class Database {
 		}, null, null, null, null, "DATE DESC");
 	}
 	
-	public Hashtable<String, Integer> fetchBooks() {
-		Cursor cursor = database.query(true, BOOK_TABLE_NAME,
-				new String[]{"_id", "SENKEI"}, null, null, null, null, null, null);
-		Hashtable<String, Integer> map = new Hashtable<String, Integer>();
+	public Hashtable<String, Long> fetchBooks() {
+		return fetchNameTableMap(BOOK_TABLE_NAME);
+	}
+	
+	public Hashtable<String, Long> fetchCategories() {
+		return fetchNameTableMap(CATEGORY_TABLE_NAME);
+	}
+	
+	public long newCategory(String name)
+	{
+		return insertNewName(name, CATEGORY_TABLE_NAME);
+	}
+	
+	public long newBook(String name)
+	{
+		return insertNewName(name, BOOK_TABLE_NAME);
+	}
+
+	long insertNewName(String name, String tableName) {
+		ContentValues values = new ContentValues();
+		values.put("NAME", name);
+		return database.insert(tableName, null, values);
+	}
+	
+	
+	public void insert(Entry entry) {
+		ContentValues values = valuesFrom(entry);		
+		database.insert(ENTRY_TABLE_NAME, null, values);
+	}
+
+	public void update(Entry entry) {
+		ContentValues values = valuesFrom(entry);		
+		database.update(ENTRY_TABLE_NAME, values, "_id = ?", new String[] { String.valueOf(entry.getId()) } );
+	}
+	
+	ContentValues valuesFrom(Entry entry) {
+		ContentValues values = new ContentValues();
+		copyTo(entry, values);
+		return values;
+	}
+	
+
+	void copyTo(Entry entry, ContentValues values) {
+		values.put("DATE", entry.getDate().getTime());
+		values.put("CATEGORY", entry.getCategoryId());
+		values.put("MEMO", entry.getMemo());
+		values.put("PRICE", entry.getPrice());
+		values.put("BOOK", entry.getBookId());
+	}
+	
+
+	Hashtable<String, Long> fetchNameTableMap(String tableName) {
+		Cursor cursor = database.query(true, tableName,
+				new String[]{"_id", "NAME"}, null, null, null, null, null, null);
+		Hashtable<String, Long> map = new Hashtable<String, Long>();
 		while(!cursor.isLast())
 		{
 			cursor.moveToNext();
-			map.put(cursor.getString(1), cursor.getInt(0));
+			map.put(cursor.getString(1), cursor.getLong(0));
 		}
 		cursor.close();
 		return map;
