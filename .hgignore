@@ -1,3 +1,5 @@
 syntax: glob
 DailyExpenseMemo/gen/
 DailyExpenseMemo/bin/
+DailyExpenseMemoTest/bin/
+DailyExpenseMemoTest/gen/

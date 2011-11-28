@@ -21,6 +21,9 @@
         <activity android:name=".EntryActivity"
 	        android:label="EntryActivity">
        </activity>
+        <activity android:name=".FilePickerActivity"
+	        android:label="Pick CSV File">
+       </activity>
     </application>
 
 </manifest>

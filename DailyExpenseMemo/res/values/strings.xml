@@ -3,5 +3,6 @@
     <string name="app_name">DailyExpenseMemo</string>
     <string name="business_checkbox_label">Business</string>
     <string name="save_button_label">Save</string>
+    <string name="import_menu_label">Import</string>
         
 </resources>
