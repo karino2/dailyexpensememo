@@ -8,11 +8,11 @@ import java.util.Hashtable;
 	public static Hashtable<String, Integer> bookMap;
 	public static Hashtable<String, Integer> categoryMap;
 	*/
-	public Entry(Date date, long category, String memo, long price, long book, boolean business)
+	public Entry(Date date, long category, String memo, int price, long book, boolean business)
 	{
 		this(-1, date, category, memo, price, book, business);
 	}	
-	public Entry(long id, Date date, long category, String memo, long price, long book, boolean business)
+	public Entry(long id, Date date, long category, String memo, int price, long book, boolean business)
 	{
 		this.id = id;
 		this.date = date;
@@ -51,11 +51,11 @@ import java.util.Hashtable;
 		return memo;
 	}
 
-	public void setPrice(long price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 
-	public long getPrice() {
+	public int getPrice() {
 		return price;
 	}
 
@@ -67,6 +67,6 @@ import java.util.Hashtable;
 	private Date date;
 	private long categoryId;
 	private String memo;
-	private long price;
+	private int price;
 	private long bookId;
 }

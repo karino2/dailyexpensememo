@@ -1,5 +1,7 @@
 package com.livejournal.karino2.DailyExpenseMemo;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +13,14 @@ import android.widget.Toast;
 public class EntryActivity extends Activity {
 	private static final int REQUEST_PICK_FILE = 1;
 	
+	Database database;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		database = new Database();
+		database.open(this);
+		
         setContentView(R.layout.entry);
 
     }
@@ -42,7 +49,20 @@ public class EntryActivity extends Activity {
     	{
     	case REQUEST_PICK_FILE:
     		// start import.
-    		showMessage(data.getData().getPath());
+    		String path = data.getData().getPath();
+    		EntryStore store = new EntryStore(database);
+    		store.setCategoryMap(database.fetchCategories());
+    		CsvImporter importer = new CsvImporter(DailyExpenseMemoActivity.getBookId(this), store);
+    		showMessage("import: " + path);
+    		try {
+				importer.importCsv(path);
+			} catch (IOException e) {
+				e.printStackTrace();
+				showMessage("IO exception while reading!");
+			} catch( RuntimeException re)
+			{
+				showMessage("RuntimeException while reading csv: "+ re.getMessage());
+			}
     		break;
     	}
     	super.onActivityResult(requestCode, resultCode, data);

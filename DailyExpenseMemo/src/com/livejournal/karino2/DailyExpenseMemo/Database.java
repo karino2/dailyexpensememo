@@ -86,7 +86,7 @@ public class Database {
 		builder.setTables("entry LEFT OUTER JOIN category ON (entry.CATEGORY = category._id) ");
 		
 		return builder.query(database, new String[] {
-		"entry._id", "DATE", "category.NAME", "MEMO", "PRICE", "BUSINESS" 
+		"entry._id AS _id", "DATE", "NAME", "MEMO", "PRICE", "BUSINESS" 
 		}, "book = ?", new String[] { String.valueOf(bookId) }, null, null, "DATE DESC");
 	}
 	
@@ -166,6 +166,11 @@ public class Database {
 		Cursor cursor = database.query(true, tableName,
 				new String[]{"_id", "NAME"}, null, null, null, null, null, null);
 		return cursor;
+	}
+
+	public void deleteBook(long id) {
+		database.delete(ENTRY_TABLE_NAME, "BOOK = ?", new String[]{ String.valueOf(id) });
+		database.delete(BOOK_TABLE_NAME, "_id = ?", new String[] { String.valueOf(id)} );
 	}
 	
 

@@ -16,12 +16,13 @@ public class HistoryActivity extends ListActivity {
 	Database database;
 	
 	Hashtable<Long, String> categoryMap;
-	Hashtable<Long, String> bookMap;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		database = new Database();
 		database.open(this);
+		
+		categoryMap = database.fetchCategories();
 		
 		
 		long bookId = DailyExpenseMemoActivity.getBookId(this);
@@ -30,24 +31,26 @@ public class HistoryActivity extends ListActivity {
 		startManagingCursor(cursor);
 		
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.history_item, 
-				cursor, new String[] {"DATE", "category.NAME", "MEMO", "PRICE", "BUSINESS"}, 
+				cursor, new String[] {"DATE", "NAME", "MEMO", "PRICE", "BUSINESS"}, 
 				new int[] {R.id.dateTextView, R.id.categoryTextView, R.id.memoTextView, R.id.priceTextView, R.id.businessView});
 		adapter.setViewBinder(new ViewBinder() {
 
 			@Override
 			public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-				if(columnIndex == 2) {
+				if(columnIndex == 1) {
 					TextView tv = (TextView)view;
 					SimpleDateFormat  sdf = new SimpleDateFormat("yyyy/MM/dd");
 					tv.setText(sdf.format(new Date(cursor.getLong(columnIndex))));
 		            return true;
 				}
+				/*
 				if(columnIndex == 3) {
 					TextView tv = (TextView)view;
 					tv.setText(categoryMap.get(cursor.getLong(columnIndex)));
 					return true;
 				}
-				if(columnIndex == 6) {
+				*/
+				if(columnIndex == 5) {
 					TextView tv = (TextView)view;
 					if(cursor.getInt(columnIndex) == 1)
 						tv.setText("v");

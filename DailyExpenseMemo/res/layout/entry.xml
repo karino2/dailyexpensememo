@@ -55,9 +55,9 @@
 			            android:layout_height="wrap_content"/>
 		            		        	
 			        <EditText android:id="@+id/memo_edit"
-			            android:text="Memo"
+			            android:hint="Memo"
 			            android:layout_width="fill_parent"
-			            android:layout_height="60dip"/>
+			            android:layout_height="wrap_content"/>
 		            <Button android:id="@+id/save_button"
 			            android:text="@string/save_button_label"
 			            android:layout_width="fill_parent"

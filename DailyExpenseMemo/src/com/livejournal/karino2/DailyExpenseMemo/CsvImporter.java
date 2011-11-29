@@ -1,0 +1,55 @@
+package com.livejournal.karino2.DailyExpenseMemo;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Date;
+
+public class CsvImporter {
+	long bookId;
+	EntryStorable storable;
+	
+	public CsvImporter(long bookId, EntryStorable storable)
+	{
+		this.bookId = bookId;
+		this.storable = storable;
+	}
+	
+	public void importCsv(String path) throws IOException
+	{
+		BufferedReader br = new BufferedReader(new FileReader(path), 8*1024);
+		String line = br.readLine();
+		while(line != null)
+		{
+			if(!"".equals(line))
+			{
+				Entry ent = parseLine(line);
+				storable.save(ent);
+			}
+			line = br.readLine();
+		}
+	}
+
+	public Entry parseLine(String line) {
+		String[] vals = line.split(",");
+		if(vals.length == 4 ||
+				vals.length == 3)
+		{
+			// date, category, price, memo
+			// in this case, I treat price as negative because this is the case for eicash.
+			Date dt = new Date(vals[0]);
+			long category = storable.toId(vals[1]);
+			int price = - ((int)Double.parseDouble(vals[2]));
+			String memo = "";
+			if(vals.length == 4)
+				memo = vals[3];
+			return new Entry(dt, category, memo, price, bookId, false);
+		}
+		else if (vals.length == 5)
+		{
+			throw new RuntimeException("NYI");
+		}
+		throw new RuntimeException("invalid csv, NYI");
+	}
+	
+}

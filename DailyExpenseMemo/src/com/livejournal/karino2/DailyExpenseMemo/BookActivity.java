@@ -7,11 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
@@ -42,8 +45,25 @@ public class BookActivity extends ListActivity {
 	            
 				Intent intent = new Intent(BookActivity.this, DailyExpenseMemoActivity.class);
 				startActivity(intent);
-				finish();
+				// finish();
 			}});
+		
+		registerForContextMenu(getListView());
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(R.string.delete_label);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        database.deleteBook(info.id);
+        cursor.requery();
+		return super.onContextItemSelected(item);
 	}
 	
 	@Override
