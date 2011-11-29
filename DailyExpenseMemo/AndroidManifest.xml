@@ -24,6 +24,15 @@
         <activity android:name=".FilePickerActivity"
 	        android:label="Pick CSV File">
        </activity>
-    </application>
+        <activity android:name=".HistoryActivity"
+	        android:label="History">
+       </activity>
+        <activity android:name=".BookActivity"
+	        android:label="Book">
+       </activity>
+        <activity android:name=".CategoryActivity"
+	        android:label="Category">
+       </activity>
+        </application>
 
 </manifest>

@@ -41,6 +41,7 @@ public class Database {
                     + "CATEGORY INTEGER,"
                     + "MEMO TEXT,"
                     + "PRICE INTEGER,"
+                    + "BUSINESS INTEGER,"
                     + "BOOK INTEGER"
                     + ");");
         }
@@ -75,7 +76,7 @@ public class Database {
 		dbHelper.recreate(database);
 	}
 
-	public Cursor fetchAllEntry(String selection, String[] selectionArgs) {
+	public Cursor fetchAllEntry(long bookId) {
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		// use table name directly for simplicity.
 		/*
@@ -85,15 +86,23 @@ public class Database {
 		builder.setTables("entry LEFT OUTER JOIN category ON (entry.CATEGORY = category._id) ");
 		
 		return builder.query(database, new String[] {
-		"_id", "DATE", "category.NAME", "MEMO", "PRICE"  
-		}, null, null, null, null, "DATE DESC");
+		"entry._id", "DATE", "category.NAME", "MEMO", "PRICE", "BUSINESS" 
+		}, "book = ?", new String[] { String.valueOf(bookId) }, null, null, "DATE DESC");
 	}
 	
-	public Hashtable<String, Long> fetchBooks() {
+	public Cursor fetchBooksCursor() {
+		return fetchNameTableCursor(BOOK_TABLE_NAME);
+	}
+	
+	public Cursor fetchCategoriesCursor() {
+		return fetchNameTableCursor(CATEGORY_TABLE_NAME);
+	}
+	
+	public Hashtable<Long, String> fetchBooks() {
 		return fetchNameTableMap(BOOK_TABLE_NAME);
 	}
 	
-	public Hashtable<String, Long> fetchCategories() {
+	public Hashtable<Long, String> fetchCategories() {
 		return fetchNameTableMap(CATEGORY_TABLE_NAME);
 	}
 	
@@ -137,20 +146,26 @@ public class Database {
 		values.put("MEMO", entry.getMemo());
 		values.put("PRICE", entry.getPrice());
 		values.put("BOOK", entry.getBookId());
+		values.put("BUSINESS", entry.isBusiness() ? 1 : 0);
 	}
 	
 
-	Hashtable<String, Long> fetchNameTableMap(String tableName) {
-		Cursor cursor = database.query(true, tableName,
-				new String[]{"_id", "NAME"}, null, null, null, null, null, null);
-		Hashtable<String, Long> map = new Hashtable<String, Long>();
+	Hashtable<Long, String> fetchNameTableMap(String tableName) {
+		Cursor cursor = fetchNameTableCursor(tableName);
+		Hashtable<Long, String> map = new Hashtable<Long, String>();
 		while(!cursor.isLast())
 		{
 			cursor.moveToNext();
-			map.put(cursor.getString(1), cursor.getLong(0));
+			map.put(cursor.getLong(0), cursor.getString(1));
 		}
 		cursor.close();
 		return map;
+	}
+
+	Cursor fetchNameTableCursor(String tableName) {
+		Cursor cursor = database.query(true, tableName,
+				new String[]{"_id", "NAME"}, null, null, null, null, null, null);
+		return cursor;
 	}
 	
 
