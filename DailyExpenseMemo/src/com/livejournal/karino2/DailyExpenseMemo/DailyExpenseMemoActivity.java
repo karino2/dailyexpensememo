@@ -47,13 +47,14 @@ public class DailyExpenseMemoActivity extends TabActivity {
         
         tabHost.addTab(tabHost.newTabSpec("tab1")
                 .setIndicator("Entry")
-                .setContent(new Intent(this, EntryActivity.class)));
+                .setContent(new Intent(this, EntryActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
         tabHost.addTab(tabHost.newTabSpec("tab2")
                 .setIndicator("History")
-                .setContent(new Intent(this, HistoryActivity.class)));
+                .setContent(new Intent(this, HistoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
         tabHost.addTab(tabHost.newTabSpec("tab3")
                 .setIndicator("Category")
-                .setContent(new Intent(this, CategoryActivity.class)));
+                .setContent(new Intent(this, CategoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
         
         
     }

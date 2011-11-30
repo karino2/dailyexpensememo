@@ -92,7 +92,7 @@ public class Database {
 		
 		return builder.query(database, new String[] {
 		"entry._id AS _id", "DATE", "NAME", "MEMO", "PRICE", "BUSINESS" 
-		}, "book = ?", new String[] { String.valueOf(bookId) }, null, null, "DATE DESC");
+		}, "book = ?", new String[] { String.valueOf(bookId) }, null, null, "DATE DESC, _id DESC");
 	}
 	
 	public Cursor fetchBooksCursor() {
