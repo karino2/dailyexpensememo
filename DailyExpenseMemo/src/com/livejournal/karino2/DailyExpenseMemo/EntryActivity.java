@@ -24,6 +24,8 @@ public class EntryActivity extends Activity {
 	private static final int REQUEST_PICK_FILE = 1;
 	
 	Database database;
+	long entryId;
+	long bookId;
 	
 	static class NumberButtonHandler implements OnClickListener
 	{
@@ -59,22 +61,82 @@ public class EntryActivity extends Activity {
         setUpTenKeys();
         setUpDateNavigater();
         
+        
         ((Button)findViewById(R.id.save_button)).setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				save();
 				showMessage("saved");
-				clearEntry();
+				finishEntry();
 			}
         	
         });
+        bookId = DailyExpenseMemoActivity.getBookId(this);
+        entryId = getIntent().getLongExtra("EntryID", -1);
+        if(entryId != -1)
+        {
+        	setupEntryValue();
+        }
     }
     
-    private void clearEntry() {
+    private boolean isEditMode() {
+    	return Intent.ACTION_EDIT.equals(getIntent().getAction());
+    }
+    
+    private void setupEntryValue() {
+    	Entry ent = database.fetchEntry(bookId, entryId);
+    	
+    	setDate(ent.getDate());
+    	
+    	setSpinnerSelection(ent);
+    	setETText(R.id.money_edit, String.valueOf(ent.getPrice()));
+    	setETText(R.id.memo_edit, ent.getMemo());
+    	((CheckBox)findViewById(R.id.business_checkbox)).setChecked(ent.isBusiness());
+    	Button del = ((Button)findViewById(R.id.del_button));
+    	del.setEnabled(true);
+    	del.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				database.deleteEntry(entryId);
+				finishEntry();
+			}
+		});
+	}
+
+	void setSpinnerSelection(Entry ent) {
+		int position = -1;
+    	Cursor categoryCursor = database.fetchCategoriesCursor();
+    	categoryCursor.moveToFirst();
+    	for(int i = 0; i < categoryCursor.getCount(); i++)
+    	{
+    		if(ent.getCategoryId() == categoryCursor.getLong(0))
+    		{
+    			position = i;
+    			break;
+    		}
+    		categoryCursor.moveToNext();
+    	}
+    	categoryCursor.close();
+    	if(position != -1)
+    		getCategorySpinner().setSelection(position);
+	}
+	
+	private void finishEntry() {
+		if(isEditMode())
+			finish();
+		else
+			clearEntry();
+	}
+
+	private void clearEntry() {
     	((CheckBox)findViewById(R.id.business_checkbox)).setChecked(false);
-    	((EditText)findViewById(R.id.money_edit)).setText("0");
-    	((EditText)findViewById(R.id.memo_edit)).setText("");    	
+    	setETText(R.id.money_edit, "0");
+    	setETText(R.id.memo_edit, "");
+    	getCategorySpinner().setSelection(0);
+    	((Button)findViewById(R.id.del_button)).setEnabled(false);
+    	entryId = -1;
 	}
 
 	private void setUpDateNavigater() {
@@ -101,18 +163,25 @@ public class EntryActivity extends Activity {
 
 	void setDate(Date today) {
 		SimpleDateFormat  sdf = new SimpleDateFormat("yyyy/MM/dd");
-		EditText et = (EditText)findViewById(R.id.date_entry_edit);
-		et.setText(sdf.format(today));
+		setETText(R.id.date_entry_edit, sdf.format(today));
 	}
 
 	private String getETText(int rid)
     {
     	return ((EditText)findViewById(rid)).getText().toString();
     }
+	
+	private void setETText(int rid, String val)
+	{
+    	((EditText)findViewById(rid)).setText(val);		
+	}
     
     private void save() {
     	Entry ent = generateEntry();
-    	database.insert(ent);
+    	if(ent.getId() == -1)
+    		database.insert(ent);
+    	else
+    		database.update(ent);
     }
     
     private Entry generateEntry() {
@@ -122,7 +191,7 @@ public class EntryActivity extends Activity {
     	String memo = getETText(R.id.memo_edit);
     	boolean isBusiness = ((CheckBox)findViewById(R.id.business_checkbox)).isChecked();
     	
-    	return new Entry(date, category, memo, price, DailyExpenseMemoActivity.getBookId(this), isBusiness);
+    	return new Entry(entryId, date, category, memo, price, bookId, isBusiness);
     }
 
 	Date getDate() {
@@ -165,7 +234,6 @@ public class EntryActivity extends Activity {
         startManagingCursor(cursor);
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor,
         		new String[]{"NAME"}, new int[] {android.R.id.text1});
-        
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 	}
@@ -202,7 +270,7 @@ public class EntryActivity extends Activity {
     		String path = data.getData().getPath();
     		EntryStore store = new EntryStore(database);
     		store.setCategoryMap(database.fetchCategories());
-    		CsvImporter importer = new CsvImporter(DailyExpenseMemoActivity.getBookId(this), store);
+    		CsvImporter importer = new CsvImporter(bookId, store);
     		showMessage("import: " + path);
     		try {
 				importer.importCsv(path);

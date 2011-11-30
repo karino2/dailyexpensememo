@@ -36,10 +36,9 @@ public class CsvImporter {
 				vals.length == 3)
 		{
 			// date, category, price, memo
-			// in this case, I treat price as negative because this is the case for eicash.
 			Date dt = new Date(vals[0]);
 			long category = storable.toId(vals[1]);
-			int price = - ((int)Double.parseDouble(vals[2]));
+			int price = Math.abs(((int)Double.parseDouble(vals[2])));
 			String memo = "";
 			if(vals.length == 4)
 				memo = vals[3];

@@ -44,7 +44,7 @@ public class DailyExpenseMemoActivity extends TabActivity {
         
         
         final TabHost tabHost = getTabHost();
-
+        
         tabHost.addTab(tabHost.newTabSpec("tab1")
                 .setIndicator("Entry")
                 .setContent(new Intent(this, EntryActivity.class)));
@@ -54,6 +54,7 @@ public class DailyExpenseMemoActivity extends TabActivity {
         tabHost.addTab(tabHost.newTabSpec("tab3")
                 .setIndicator("Category")
                 .setContent(new Intent(this, CategoryActivity.class)));
+        
         
     }
 }

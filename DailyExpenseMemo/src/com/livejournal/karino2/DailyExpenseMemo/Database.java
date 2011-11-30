@@ -1,5 +1,6 @@
 package com.livejournal.karino2.DailyExpenseMemo;
 
+import java.sql.Date;
 import java.util.Hashtable;
 
 import android.content.ContentValues;
@@ -44,6 +45,10 @@ public class Database {
                     + "BUSINESS INTEGER,"
                     + "BOOK INTEGER"
                     + ");");
+            
+    		ContentValues values = new ContentValues();
+    		values.put("NAME", "Foods"); // add one entry for less special case.
+            db.insert(CATEGORY_TABLE_NAME, null, values);
         }
 
         @Override
@@ -102,6 +107,7 @@ public class Database {
 		return fetchNameTableMap(BOOK_TABLE_NAME);
 	}
 	
+		
 	public Hashtable<Long, String> fetchCategories() {
 		return fetchNameTableMap(CATEGORY_TABLE_NAME);
 	}
@@ -171,6 +177,25 @@ public class Database {
 	public void deleteBook(long id) {
 		database.delete(ENTRY_TABLE_NAME, "BOOK = ?", new String[]{ String.valueOf(id) });
 		database.delete(BOOK_TABLE_NAME, "_id = ?", new String[] { String.valueOf(id)} );		
+	}
+
+	public Entry fetchEntry(long bookId, long entryId) {
+		Cursor cursor = database.query(ENTRY_TABLE_NAME, new String[]{"_id",  "DATE", "CATEGORY", "MEMO", "PRICE", "BUSINESS" },
+				"_id = ?", new String[] { String.valueOf(entryId) }, null, null, null);
+		cursor.moveToFirst();
+		Entry ent = new Entry(cursor.getLong(0),
+				new Date(cursor.getLong(1)),
+				cursor.getLong(2),
+				cursor.getString(3),
+				cursor.getInt(4),
+				bookId,
+				cursor.getInt(5) == 1 ? true : false);
+		cursor.close();
+		return ent;
+	}
+
+	public void deleteEntry(long entryId) {
+		database.delete(ENTRY_TABLE_NAME, "_id = ?", new String[]{ String.valueOf(entryId) });
 	}
 	
 

@@ -5,9 +5,12 @@ import java.util.Date;
 import java.util.Hashtable;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
@@ -43,13 +46,6 @@ public class HistoryActivity extends ListActivity {
 					tv.setText(sdf.format(new Date(cursor.getLong(columnIndex))));
 		            return true;
 				}
-				/*
-				if(columnIndex == 3) {
-					TextView tv = (TextView)view;
-					tv.setText(categoryMap.get(cursor.getLong(columnIndex)));
-					return true;
-				}
-				*/
 				if(columnIndex == 5) {
 					TextView tv = (TextView)view;
 					if(cursor.getInt(columnIndex) == 1)
@@ -61,6 +57,18 @@ public class HistoryActivity extends ListActivity {
 				return false;
 			}});
 		setListAdapter(adapter);
+		
+		getListView().setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(HistoryActivity.this, EntryActivity.class);
+				intent.setAction(Intent.ACTION_EDIT);
+				intent.putExtra("EntryID", id);
+				startActivity(intent);
+			}});
+		
 		super.onCreate(savedInstanceState);
 	}
 	

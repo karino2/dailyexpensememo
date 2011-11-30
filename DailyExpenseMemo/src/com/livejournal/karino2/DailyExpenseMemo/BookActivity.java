@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 public class BookActivity extends ListActivity {
 	static final int INPUT_DIALOG_ID = 1;
+	static final int QUERY_DELETE_DIALOG_ID = 2;
 	Database database;
 	Cursor cursor;
 	@Override
@@ -45,7 +47,6 @@ public class BookActivity extends ListActivity {
 	            
 				Intent intent = new Intent(BookActivity.this, DailyExpenseMemoActivity.class);
 				startActivity(intent);
-				// finish();
 			}});
 		
 		registerForContextMenu(getListView());
@@ -94,6 +95,24 @@ public class BookActivity extends ListActivity {
                 }
             })
             .create();
+		case QUERY_DELETE_DIALOG_ID:
+			return new AlertDialog.Builder(this)
+			.setTitle("Delete All Database?")
+			.setMessage("!!!!Causion!!!!\nThis is basically for development purpose.\n Really Delete!?")
+			.setPositiveButton("YES", new OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					database.recreate();
+					cursor.requery();
+				}})
+			.setNegativeButton("Cancel", new OnClickListener(){
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// do nothing.
+				}})
+			.create();
 		}
 		return super.onCreateDialog(id);
 	}
@@ -108,6 +127,9 @@ public class BookActivity extends ListActivity {
 		{
 		case R.id.menu_new_book_item:
 			showDialog(INPUT_DIALOG_ID);
+			break;
+		case R.id.menu_delete_all_item:
+			showDialog(QUERY_DELETE_DIALOG_ID);
 			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
