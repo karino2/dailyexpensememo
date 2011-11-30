@@ -84,10 +84,6 @@ public class Database {
 	public Cursor fetchAllEntry(long bookId) {
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		// use table name directly for simplicity.
-		/*
-		builder.setTables("entry LEFT OUTER JOIN category ON (entry.CATEGORY = category._id) "+
-				" LEFT OUTER JOIN book ON (entry.BOOK = book._id)");
-				*/
 		builder.setTables("entry LEFT OUTER JOIN category ON (entry.CATEGORY = category._id) ");
 		
 		return builder.query(database, new String[] {
