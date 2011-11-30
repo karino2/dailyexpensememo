@@ -98,11 +98,11 @@
 				            android:layout_width="0dip"
 				            android:layout_weight="1"
 				            android:layout_height="wrap_content"/>
-			            <TextView 
-				            android:text=" "
+			            <Button android:id="@+id/del_button"
+				            android:text="DEL"
 				            android:layout_width="0dip"
 				            android:layout_weight="1"
-				            android:layout_height="wrap_content"/>			            
+				            android:layout_height="wrap_content"/>
 			        </TableRow>
 				    <TableRow>
 			            <Button android:id="@+id/button_0"
