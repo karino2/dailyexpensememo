@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.livejournal.karino2.DailyExpenseMemo.CsvImporter;
 import com.livejournal.karino2.DailyExpenseMemo.Entry;
+import com.livejournal.karino2.DailyExpenseMemo.EntryActivity;
 import com.livejournal.karino2.DailyExpenseMemo.EntryStorable;
 import com.livejournal.karino2.DailyExpenseMemo.EntryStore;
 
@@ -109,4 +110,22 @@ public class CsvImporterTest {
 		return expect;
 	}
 	
+	// EntryActivityTest
+	@Test
+	public void test_nextDate_endOfMonth()
+	{
+		Date dt = createDate(2011, 11, 30);
+		Date next = EntryActivity.DateUtility.nextDate(dt);
+		
+		assertEqualsDate(2011,12,1, next);		
+	}
+	
+	@Test
+	public void test_prevDate_beginningOfMonth()
+	{
+		Date dt = createDate(2011, 11, 1);
+		Date prev = EntryActivity.DateUtility.prevDate(dt);
+		
+		assertEqualsDate(2011,10,31, prev);		
+	}
 }

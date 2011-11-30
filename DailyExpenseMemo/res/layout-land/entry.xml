@@ -47,11 +47,12 @@
 		            android:layout_height="fill_parent" >
 			        <EditText android:id="@+id/money_edit"
 			            android:text="0"
+			            android:inputType="number"
 			            android:layout_width="fill_parent"
 			            android:layout_height="wrap_content"/>
 		            		        	
 			        <EditText android:id="@+id/memo_edit"
-			            android:text="Memo"
+			            android:hint="Memo"
 			            android:layout_width="fill_parent"
 			            android:layout_height="wrap_content"/>
 		            <Button android:id="@+id/save_button"

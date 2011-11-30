@@ -170,7 +170,7 @@ public class Database {
 
 	public void deleteBook(long id) {
 		database.delete(ENTRY_TABLE_NAME, "BOOK = ?", new String[]{ String.valueOf(id) });
-		database.delete(BOOK_TABLE_NAME, "_id = ?", new String[] { String.valueOf(id)} );
+		database.delete(BOOK_TABLE_NAME, "_id = ?", new String[] { String.valueOf(id)} );		
 	}
 	
 

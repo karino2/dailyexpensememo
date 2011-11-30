@@ -51,6 +51,7 @@
 		            android:layout_height="fill_parent" >
 			        <EditText android:id="@+id/money_edit"
 			            android:text="0"
+			            android:inputType="number"
 			            android:layout_width="fill_parent"
 			            android:layout_height="wrap_content"/>
 		            		        	
@@ -131,7 +132,12 @@
 				            android:layout_width="0dip"
 				            android:layout_weight="1"
 				            android:layout_height="wrap_content"/>
-			        </TableRow>
+			            <Button android:id="@+id/del_button"
+				            android:text="DEL"
+				            android:layout_width="0dip"
+				            android:layout_weight="1"
+				            android:layout_height="wrap_content"/>
+			       </TableRow>
 				        				        			        
    				</TableLayout>
   			</LinearLayout>
