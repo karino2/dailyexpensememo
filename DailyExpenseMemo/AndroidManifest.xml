@@ -33,6 +33,9 @@
         <activity android:name=".CategoryActivity"
 	        android:label="Category">
        </activity>
+        <activity android:name=".SummaryActivity"
+	        android:label="Summary">
+       </activity>
         </application>
 
 </manifest>

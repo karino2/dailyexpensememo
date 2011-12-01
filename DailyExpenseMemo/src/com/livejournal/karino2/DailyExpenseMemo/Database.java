@@ -1,6 +1,6 @@
 package com.livejournal.karino2.DailyExpenseMemo;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Hashtable;
 
 import android.content.ContentValues;
@@ -79,6 +79,38 @@ public class Database {
 	
 	public void recreate() {
 		dbHelper.recreate(database);
+	}
+	
+	public int totalPrice(long bookId, Date from, Date until)
+	{
+		return totalPriceCommonGeneric("BOOK = ? AND DATE >= ? AND DATE < ?",
+				new String[]{String.valueOf(bookId),
+				String.valueOf(from.getTime()),
+				String.valueOf(until.getTime())});
+	}
+	
+	public Date earliest(long bookId)
+	{
+		Date ret = null;
+		Cursor cursor = database.query(ENTRY_TABLE_NAME, new String[]{"MIN(DATE)"}, "BOOK = ?", new String[]{ String.valueOf(bookId)}, null, null, null);
+		if(cursor.moveToFirst())
+		{
+			ret = new Date(cursor.getLong(0));
+		}
+		cursor.close();
+		return ret;
+	}
+
+	int totalPriceCommonGeneric(String selection, String[] selectionArg) {
+		int ret = 0;
+		Cursor cursor = database.query(ENTRY_TABLE_NAME,
+				new String[]{"SUM(PRICE)"}, selection, selectionArg, null, null, null, null);
+		if(cursor.moveToFirst())
+		{
+			ret = cursor.getInt(0);
+		}
+		cursor.close();
+		return ret;
 	}
 
 	public Cursor fetchAllEntry(long bookId) {
@@ -194,6 +226,15 @@ public class Database {
 		database.delete(ENTRY_TABLE_NAME, "_id = ?", new String[]{ String.valueOf(entryId) });
 	}
 	
+	public static Date beforeDate(Date target, int minusDay) {
+		long mil = target.getTime();
+		return new Date(mil - ((long)minusDay)*24*60*60*1000);
+	}
+
+	public static int betweenDate(Date from, Date to) {
+		// ex. from 11/13 to 11/14, expectation would be 2 because caller collect the entry of 11/13 and 11/14.
+		return (int)((to.getTime()-from.getTime())/(24*60*60*1000))+1;
+	}
 
 
 }

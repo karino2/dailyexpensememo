@@ -7,11 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.livejournal.karino2.DailyExpenseMemo.CsvImporter;
+import com.livejournal.karino2.DailyExpenseMemo.Database;
 import com.livejournal.karino2.DailyExpenseMemo.Entry;
 import com.livejournal.karino2.DailyExpenseMemo.EntryActivity;
 import com.livejournal.karino2.DailyExpenseMemo.EntryStorable;
 import com.livejournal.karino2.DailyExpenseMemo.EntryStore;
-
 import static org.junit.Assert.*;
 
 public class CsvImporterTest {
@@ -127,5 +127,24 @@ public class CsvImporterTest {
 		Date prev = EntryActivity.DateUtility.prevDate(dt);
 		
 		assertEqualsDate(2011,10,31, prev);		
+	}
+	
+	@Test
+	public void test_beforeDate()
+	{
+		Date input = createDate(2011, 11, 4);
+		
+		Date actual = Database.beforeDate(input, 3);
+		assertEqualsDate(2011, 11, 1, actual);		
+	}
+	
+	@Test
+	public void test_betweenDate()
+	{
+		Date inputFrom = createDate(2011, 11, 4);
+		Date inputTo = createDate(2011, 11, 6);
+		
+		int actual = Database.betweenDate(inputFrom, inputTo);
+		assertEquals(3, actual);
 	}
 }

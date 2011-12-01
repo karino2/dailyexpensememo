@@ -7,5 +7,10 @@
     <string name="menu_new_book_label">New Book</string>
     <string name="delete_label">Delete</string>
     <string name="delete_all_label">Delete All</string>
-        
+    <string name="average_label">Average</string>
+    <string name="total_label">Total</string>
+    <string name="prev_7_days_label">Last 7 days</string>
+    <string name="prev_30_days_label">Last 30 days</string>
+    <string name="all_past_label">Until yesterday</string>
+    <string name="today_label">Today</string>        
 </resources>
