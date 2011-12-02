@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.livejournal.karino2.DailyExpenseMemo.BookActivity;
 import com.livejournal.karino2.DailyExpenseMemo.CsvImporter;
 import com.livejournal.karino2.DailyExpenseMemo.Database;
 import com.livejournal.karino2.DailyExpenseMemo.Entry;
@@ -146,5 +147,46 @@ public class CsvImporterTest {
 		
 		int actual = Database.betweenDate(inputFrom, inputTo);
 		assertEquals(3, actual);
+	}
+	
+	@Test
+	public void test_sanitize_normal()
+	{
+		validateSanitize("hoge", "hoge");
+	}
+	
+	@Test
+	public void test_sanitize_return()
+	{
+		validateSanitize("ab\ncd", "ab cd");
+	}
+	
+	@Test
+	public void test_sanitize_dblquote()
+	{
+		validateSanitize("\"abc", " abc");
+	}
+	
+	@Test
+	public void test_sanitize_comma()
+	{
+		validateSanitize("a,b", "a b");		
+	}
+	
+	@Test
+	public void test_sanitize_mix()
+	{
+		validateSanitize("a,b\nc", "a b c");
+	}
+
+
+	void validateSanitize(String input, String expect) {
+		String actual = callSanitize(input);
+		assertEquals(expect, actual);
+	}
+
+	String callSanitize(String str) {
+		String actual = BookActivity.BookActivitySanitizer.sanitize(str);
+		return actual;
 	}
 }

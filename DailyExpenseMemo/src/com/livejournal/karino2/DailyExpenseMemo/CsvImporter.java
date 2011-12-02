@@ -46,7 +46,13 @@ public class CsvImporter {
 		}
 		else if (vals.length == 5)
 		{
-			throw new RuntimeException("NYI");
+			// date, category, price, memo, business
+			Date dt = new Date(vals[0]);
+			long category = storable.toId(vals[1]);
+			int price = Math.abs(((int)Double.parseDouble(vals[2])));
+			String memo = vals[3];
+			boolean business = "business".equals(vals[4]);
+			return new Entry(dt, category, memo, price, bookId, business);
 		}
 		throw new RuntimeException("invalid csv, NYI");
 	}

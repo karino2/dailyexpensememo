@@ -12,5 +12,6 @@
     <string name="prev_7_days_label">Last 7 days</string>
     <string name="prev_30_days_label">Last 30 days</string>
     <string name="all_past_label">Until yesterday</string>
-    <string name="today_label">Today</string>        
+    <string name="today_label">Today</string>
+    <string name="export_label">Export</string>        
 </resources>

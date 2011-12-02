@@ -24,7 +24,7 @@ public class SummaryActivity extends Activity {
 		int total = totalPrice(1, 0);
 		setText(R.id.today_total, String.valueOf(total));
 		
-		total = totalPrice(7, 1);
+		total = totalPrice(8, 1);
 		setText(R.id.prev_7_days_avg, new DecimalFormat("0.##").format(total/7.0));
 		setText(R.id.prev_7_days_total, String.valueOf(total));
 		
