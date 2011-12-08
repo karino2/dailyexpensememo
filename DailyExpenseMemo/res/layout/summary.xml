@@ -32,7 +32,18 @@
             android:padding="3dip" />
     </TableRow>
     
-    
+    <TableRow>
+        <TextView
+            android:text="@string/yesterday_label"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/yesterday_total"
+            android:layout_column="2"
+            android:text="1200"
+            android:gravity="right"
+            android:padding="3dip" />
+    </TableRow>
+        
     <TableRow>
         <TextView
             android:text="@string/prev_7_days_label"
