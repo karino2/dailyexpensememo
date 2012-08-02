@@ -41,6 +41,14 @@ public class DailyExpenseMemoActivity extends TabActivity {
 			return;
 		}
         
+		Database database;
+		database = new Database();
+		database.open(this);
+		String bookName = database.fetchBooks().get(bookId);
+		database.close();
+		
+		setTitle(bookName);
+		
         
         
         final TabHost tabHost = getTabHost();
